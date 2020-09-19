@@ -1,6 +1,8 @@
 ## Background
 
-This repository is experimenting an approach to pool expensive resources used by multiple agents in Jest.
+This repository is experimenting an approach to pool expensive resources used by multiple workers in Jest.
+
+Since Jest use [`vm`](https://nodejs.org/api/vm.html) to isolate workers, we need to set up a server to pool resources. It could be HTTP, Web Socket, or IPC.
 
 We have a few focus areas:
 
