@@ -255,7 +255,7 @@ function sendRequest(options, onOk, onError, opt_data, opt_proxy, opt_retries) {
         sendRequest(options, onOk, onError, opt_data, opt_proxy, opt_retries);
       }, 15);
     } else {
-      var message = e.message + ' while ' + options.host + ' ' + options.path;
+      var message = e.message + ' while ' + options.method + ' ' + options.hostname + ':' + options.port + ' ' + options.path;
       if (e.code) {
         message = e.code + ' ' + message;
       }
