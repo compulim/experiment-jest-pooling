@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "docker run -it -p 4444:4444 --rm --shm-size 2g selenium/standalone-chrome:3.141.59-20200826",
+    "start": "docker run -d --name chrome -p 4444:4444 --shm-size 2g selenium/standalone-chrome:3.141.59-20200826",
+    "stop": "docker stop chrome",
     "test": "jest"
   },
   "repository": {
