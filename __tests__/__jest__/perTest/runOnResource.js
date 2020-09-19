@@ -3,8 +3,6 @@ const { Executor, HttpClient } = require('selenium-webdriver/http');
 const { Session, WebDriver } = require('selenium-webdriver');
 const WebSocket = require('ws');
 
-// const { RESOURCE_POOL_PORT } = require('../constants');
-
 const { JEST_RESOURCE_POOL_PORT } = process.env;
 
 module.exports = async function runOnResource(fn) {

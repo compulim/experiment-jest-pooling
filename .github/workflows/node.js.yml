@@ -27,9 +27,6 @@ jobs:
     - run: npm ci
     - run: npm run start
     - run: mkdir __tests__/__temp__
-    - run: cp external/index.js node_modules/selenium-webdriver/http/index.js
     - run: npm test
-    - run: docker logs --tail all chrome
-      if: ${{ failure() }}
     - run: npm stop
       if: ${{ always() }}
