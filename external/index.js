@@ -165,6 +165,10 @@ function sendRequest(options, onOk, onError, opt_data, opt_proxy, opt_retries) {
 
   console.log(`DEBUG: ${options.method} ${options.hostname}:${options.port} ${options.path}`);
 
+  if (options.path === '/wd/hub/session') {
+    console.trace();
+  }
+
   if (opt_proxy) {
     let proxy = /** @type {RequestOptions} */(opt_proxy);
 
