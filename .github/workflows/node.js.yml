@@ -29,3 +29,4 @@ jobs:
     - run: mkdir __tests__/__temp__
     - run: npm test
     - run: npm stop
+      if: ${{ always() }}
