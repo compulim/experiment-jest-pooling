@@ -29,7 +29,9 @@ jobs:
     - run: mkdir __tests__/__temp__
     - run: cp external/index.js node_modules/selenium-webdriver/http/index.js
     - run: npm test
-    - run: docker logs chrome
+    - run: |
+        docker logs --tail all chrome
+        echo Hello, World!
       if: ${{ failure() }}
     - run: npm stop
       if: ${{ always() }}
