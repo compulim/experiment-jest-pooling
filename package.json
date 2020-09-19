@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "docker run -d --name chrome -p 4444:4444 --shm-size 2g selenium/standalone-chrome:3.141.59-20200826",
+    "start": "npm run start:docker && npm run start:readiness",
+    "start:docker": "docker run -d --name chrome -p 4444:4444 --shm-size 2g selenium/standalone-chrome:3.141.59-20200826",
+    "start:readiness": "curl -o /dev/nul -retry 10 -retry-delay 1 http://localhost:4444/",
     "stop": "docker stop chrome",
     "test": "jest"
   },
