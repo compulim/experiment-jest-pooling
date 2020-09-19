@@ -26,5 +26,6 @@
     "selenium-webdriver": "^4.0.0-alpha.7",
     "serve": "^11.3.2",
     "ws": "^7.3.1"
-  }
+  },
+  "dependencies": {}
 }

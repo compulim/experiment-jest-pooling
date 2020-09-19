@@ -8,17 +8,12 @@ async function provision() {
 }
 
 module.exports = async () => {
-  const pool = (global.webDriverPool = []);
+  const pool = [];
+
+  global.teardownWebDriverPool = () => Promise.all(pool.map(driver => driver.quit()));
 
   await setup(async fn => {
-    let driver;
-
-    driver = pool.pop();
-
-    if (!driver) {
-      driver = await provision();
-    }
-
+    const driver = pool.pop() || await provision();
     let success;
 
     try {
