@@ -163,6 +163,8 @@ function sendRequest(options, onOk, onError, opt_data, opt_proxy, opt_retries) {
   var hostname = options.hostname;
   var port = options.port;
 
+  console.log(`DEBUG: ${options.method} ${options.hostname}:${options.port} ${options.path}`);
+
   if (opt_proxy) {
     let proxy = /** @type {RequestOptions} */(opt_proxy);
 
