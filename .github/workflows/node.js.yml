@@ -26,5 +26,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run start
+    - run: mkdir __tests__/__temp__
     - run: npm test
     - run: npm stop
