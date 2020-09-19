@@ -28,5 +28,7 @@ jobs:
     - run: npm run start
     - run: mkdir __tests__/__temp__
     - run: npm test
+    - run: docker logs chrome
+      if: ${{ failure() }}
     - run: npm stop
       if: ${{ always() }}
