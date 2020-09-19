@@ -25,8 +25,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm run start
-    - run: mkdir __tests__/__temp__
+    - run: npm start
     - run: npm test
     - run: npm stop
       if: ${{ always() }}
