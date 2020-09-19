@@ -12,14 +12,10 @@ class WebDriverEnvironment extends NodeEnvironment {
   async setup() {
     await super.setup();
 
-    console.log('WebDriverEnvironment: setup');
-
     this.global.acquireWebDriver = runOnResource;
   }
 
   async teardown() {
-    console.log('WebDriverEnvironment: teardown');
-
     // Hack: Add 100ms wait for Jest to flush the console.log.
     // Repro:
     // 1. console.log('abc');

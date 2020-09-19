@@ -1,13 +1,16 @@
 const { Server } = require('ws');
-const AbortController = require('abort-controller');
+const getPort = require('get-port');
 
 let server;
 
-async function setup({ port }, acquire) {
+async function setup(acquire) {
+  const port = await getPort();
+
+  process.env.JEST_RESOURCE_POOL_PORT = port;
   server = new Server({ port });
 
-  server.on('connection', async ws => {
-    await acquire(
+  server.on('connection', ws =>
+    acquire(
       resource =>
         new Promise((resolve, reject) => {
           ws.on('message', resolve);
@@ -16,16 +19,12 @@ async function setup({ port }, acquire) {
 
           ws.send(JSON.stringify(resource));
         })
-    );
-  });
-
-  console.log(`Resource pool is up on port ${port}.`);
+    )
+  );
 }
 
 async function teardown() {
   server && server.close();
-
-  console.log(`Shutting down resource pool.`);
 }
 
 module.exports = {
