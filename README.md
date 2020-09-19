@@ -1,7 +1,20 @@
+## Background
+
+This repository is experimenting an approach to pool expensive resources used by multiple agents in Jest.
+
+We have a few focus areas:
+
+- [x] The lifetime of the pool will be same as Jest
+- [x] When multiple workers are running, multiple resources will be available
+- [x] When worker stopped unexpectedly, the resource will be recycled or decommissioned
+- [ ] A single pool will support multiple type of resources
+   - Regardless of resource type, pool will have a maximum capacity
+   - When the pool reach maximum capacity, pool will decommission an existing resource when a new type of resources is being requested
+
 ## Prerequisites
 
 - Docker
-- [https://aka.ms/wsl2](Windows Subsystem for Linux 2)
+- [Windows Subsystem for Linux 2](https://aka.ms/wsl2)
 
 ## How to run
 
