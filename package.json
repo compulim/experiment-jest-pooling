@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run start:docker && npm run start:readiness",
-    "start:docker": "docker run -d --name chrome -p 4444:4444 --shm-size 2g selenium/standalone-chrome:3.141.59-20200826",
-    "start:readiness": "curl -o /dev/nul -retry 10 -retry-delay 1 http://localhost:4444/",
+    "start:docker": "docker run --detach --name chrome --publish 4444:4444 --rm --shm-size 2g selenium/standalone-chrome:3.141.59-20200826",
+    "start:readiness": "wget --output-document=/dev/null --retry-connrefused http://localhost:4444/wd/hub/sessions",
     "stop": "docker stop chrome",
     "test": "jest"
   },
