@@ -1,5 +1,6 @@
-const { Session, WebDriver } = require('selenium-webdriver');
+const { Agent } = require('http');
 const { Executor, HttpClient } = require('selenium-webdriver/http');
+const { Session, WebDriver } = require('selenium-webdriver');
 const WebSocket = require('ws');
 
 // const { RESOURCE_POOL_PORT } = require('../constants');
@@ -8,6 +9,7 @@ const { JEST_RESOURCE_POOL_PORT } = process.env;
 
 module.exports = async function runOnResource(fn) {
   return new Promise((resolve, reject) => {
+    const agent = new Agent({ keepAlive: true });
     const ws = new WebSocket(`ws://localhost:${JEST_RESOURCE_POOL_PORT}`);
 
     ws.addEventListener('error', ({ code, error }) => {
@@ -19,7 +21,7 @@ module.exports = async function runOnResource(fn) {
 
       const driver = new WebDriver(
         new Session(id, capabilities),
-        new Executor(new HttpClient('http://localhost:4444/wd/hub'))
+        new Executor(new HttpClient('http://localhost:4444/wd/hub', agent))
       );
 
       try {
@@ -29,6 +31,7 @@ module.exports = async function runOnResource(fn) {
         reject(err);
       } finally {
         ws.close();
+        agent.destroy();
       }
     });
   });
