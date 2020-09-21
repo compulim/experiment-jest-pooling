@@ -1,6 +1,19 @@
 const NodeEnvironment = require('jest-environment-node');
+const Symbols = require('selenium-webdriver/lib/symbols');
 
 const runOnResource = require('./runOnResource');
+
+function serialize(capabilities) {
+  return capabilities
+    ? Array.from(capabilities.keys()).reduce(
+        (result, key) => ({
+          ...result,
+          [key]: capabilities.get(key)
+        }),
+        {}
+      )
+    : {};
+}
 
 class WebDriverEnvironment extends NodeEnvironment {
   constructor(config, context) {
@@ -12,7 +25,15 @@ class WebDriverEnvironment extends NodeEnvironment {
   async setup() {
     await super.setup();
 
-    this.global.acquireWebDriver = runOnResource;
+    this.global.acquireWebDriver = ({ capabilities, chromeOptions }, fn) => {
+      return runOnResource(
+        {
+          capabilities: serialize(capabilities),
+          chromeOptions: serialize(chromeOptions)
+        },
+        fn
+      );
+    };
   }
 
   async teardown() {
