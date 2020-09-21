@@ -4,13 +4,13 @@ const qs = require('qs');
 
 const { setup } = require('./resourcePool');
 
-const AUTO_DECOMMISSION_AFTER_MISSES = 4;
+const WEB_DRIVER_URL = 'http://localhost:4444/wd/hub';
 
 async function provision(capabilities, chromeOptions) {
   return await new Builder()
     .withCapabilities(new Capabilities(capabilities))
     .setChromeOptions(new ChromeOptions(chromeOptions))
-    .usingServer('http://localhost:4444/wd/hub')
+    .usingServer(WEB_DRIVER_URL)
     .build();
 }
 
@@ -20,7 +20,8 @@ function removeInline(array, element) {
   ~index && array.splice(index, 1);
 }
 
-const POOL_CAPACITY = 1;
+// This is not a very strict implementation. Due to race condition, we might overallocate temporarily.
+const POOL_CAPACITY = 4;
 
 async function housekeep(pool) {
   while (pool.length > POOL_CAPACITY) {
@@ -49,39 +50,36 @@ module.exports = async () => {
     if (entry) {
       entry.busy = true;
     } else {
+      // This is not a very strict allocation. If none of the resources are available, we will provision one right away.
+      // This means we might overallocate in case of race condition.
       const driver = await provision(capabilities, chromeOptions);
       const sessionId = (await driver.getSession()).getId();
 
       entry = {
         busy: true,
-        capabilities,
-        chromeOptions,
         decommission: async () => {
           entry.busy = true;
           removeInline(pool, entry);
 
-          await driver.quit();
+          try {
+            await driver.quit();
+          } catch (err) {}
         },
-        driver,
         key,
         sessionId
       };
 
       pool.push(entry);
-
-      await housekeep(pool);
     }
 
     try {
-      await fn({
-        capabilities: entry.capabilities,
-        id: entry.sessionId
-      });
+      await fn(JSON.stringify({ sessionId: entry.sessionId, url: WEB_DRIVER_URL }));
     } catch (err) {
       await entry.decommission();
     } finally {
       entry.busy = false;
 
+      // Doing housekeep as we might provision more than we need, due to race condition.
       await housekeep(pool);
     }
   });

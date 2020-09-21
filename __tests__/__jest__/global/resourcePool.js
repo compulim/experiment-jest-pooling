@@ -21,7 +21,7 @@ async function setup(acquire) {
           ws.on('close', () => reject('Closed without ACK, possibly test code crashed.'));
           ws.on('error', () => reject('Errored out, possibly network error.'));
 
-          ws.send(JSON.stringify(resource));
+          ws.send(resource);
         })
     )
   );

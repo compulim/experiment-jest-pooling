@@ -1,5 +1,6 @@
+const { Executor, HttpClient } = require('selenium-webdriver/http');
+const { Session, WebDriver } = require('selenium-webdriver');
 const NodeEnvironment = require('jest-environment-node');
-const Symbols = require('selenium-webdriver/lib/symbols');
 
 const runOnResource = require('./runOnResource');
 
@@ -31,7 +32,13 @@ class WebDriverEnvironment extends NodeEnvironment {
           capabilities: serialize(capabilities),
           chromeOptions: serialize(chromeOptions)
         },
-        fn
+        async data => {
+          const { sessionId, url } = JSON.parse(data);
+
+          const driver = new WebDriver(new Session(sessionId), new Executor(new HttpClient(url)));
+
+          return fn({ driver });
+        }
       );
     };
   }
