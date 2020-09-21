@@ -1,7 +1,7 @@
-const { parse } = require('url');
+const { parse: parseQuery } = require('qs');
+const { parse: parseURL } = require('url');
 const { Server } = require('ws');
 const getPort = require('get-port');
-const qs = require('qs');
 
 let server;
 
@@ -12,9 +12,9 @@ async function setup(acquire) {
 
   server = new Server({ port });
 
-  server.on('connection', (ws, request) =>
+  server.on('connection', (ws, { url }) =>
     acquire(
-      qs.parse(parse(request.url).query),
+      parseQuery(parseURL(url).query),
       resource =>
         new Promise((resolve, reject) => {
           ws.on('message', resolve);

@@ -1,6 +1,6 @@
 const { Builder, Capabilities } = require('selenium-webdriver');
 const { Options: ChromeOptions } = require('selenium-webdriver/chrome');
-const qs = require('qs');
+const { stringify } = require('qs');
 
 const { setup } = require('./resourcePool');
 
@@ -43,7 +43,7 @@ module.exports = async () => {
   global.teardownWebDriverPool = () => Promise.all(pool.map(({ decommission }) => decommission()));
 
   await setup(async (init, fn) => {
-    const key = qs.stringify(init);
+    const key = stringify(init);
     const { capabilities, chromeOptions } = init;
     let entry = pool.find(({ busy, key: target }) => !busy && target === key);
 
